@@ -35,10 +35,6 @@ peca_o = [
 peca_linha = 5
 peca_coluna = 3
 
-for linha_peca in range(len(peca_o)):
-    for coluna_peca in range(len(peca_o[linha_peca])):
-        if peca_o[linha_peca][coluna_peca] == 1:
-            tabuleiro[peca_linha + peca_linha][peca_coluna + peca_coluna] = 1
 
 while rodando:
     for evento in pygame.event.get():
@@ -65,7 +61,19 @@ while rodando:
                 (x,y,tamanho_celula,tamanho_celula),
                 1
             )      
-    
+
+
+    for linha_peca in range(len(peca_o)):
+        for coluna_peca in range(len(peca_o[linha_peca])):
+            if peca_o[linha_peca][coluna_peca] ==1:
+                x = (peca_coluna + coluna_peca) * tamanho_celula
+                y = (peca_linha + linha_peca) * tamanho_celula
+                pygame.draw.rect(
+                    janela,
+                    (0,200,255),
+                    (x,y,tamanho_celula,tamanho_celula)
+                )
+
     pygame.display.update()
     clock.tick(60)       #60 FPS   
 
