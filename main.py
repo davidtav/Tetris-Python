@@ -41,6 +41,14 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
 
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_LEFT:
+                peca_coluna -= 1
+
+            if evento.key == pygame.K_RIGHT:
+                peca_coluna += 1        
+
+
     janela.fill((20,20,20)) #cor RGB
 
     for linha in range(linhas):
