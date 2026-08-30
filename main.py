@@ -28,7 +28,17 @@ for linha in range(linhas):
 
     tabuleiro.append(nova_linha)
 
-tabuleiro[5][3] =1
+peca_o = [
+    [1,1],
+    [1,1]
+]
+peca_linha = 5
+peca_coluna = 3
+
+for linha_peca in range(len(peca_o)):
+    for coluna_peca in range(len(peca_o[linha_peca])):
+        if peca_o[linha_peca][coluna_peca] == 1:
+            tabuleiro[peca_linha + peca_linha][peca_coluna + peca_coluna] = 1
 
 while rodando:
     for evento in pygame.event.get():
