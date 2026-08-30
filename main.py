@@ -9,7 +9,7 @@ janela = pygame.display.set_mode((largura,altura))
 
 pygame.display.set_caption("Tetris Python")
 
-clock = pygame.time.Clock()
+clock = pygame.time.Clock()  #controla FPS
 
 rodando = True
 
@@ -18,8 +18,14 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
 
-    janela.fill((20,20,20))
+    janela.fill((20,20,20)) #cor RGB
+    pygame.draw.rect(
+        janela, 
+        (0,200,255),     #cor RGB
+        # x   y  l   a (onde l = largura e a de altura)
+        (200,150,30,30)  #retangulo
+    )
     pygame.display.update()
-    clock.tick(60)        
+    clock.tick(60)       #60 FPS   
 
 pygame.quit()
