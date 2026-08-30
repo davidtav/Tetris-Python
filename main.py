@@ -47,6 +47,13 @@ while rodando:
                 if peca_coluna < colunas - len(peca_o[0]):
                     peca_coluna += 1
 
+            if evento.key == pygame.K_DOWN:
+                if peca_linha < linhas -len(peca_o):
+                    peca_linha += 1
+
+
+
+
     janela.fill((20, 20, 20))  # cor RGB
 
     for linha in range(linhas):
