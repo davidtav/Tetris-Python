@@ -5,11 +5,11 @@ pygame.init()
 largura = 800
 altura = 500
 
-janela = pygame.display.set_mode((largura,altura))
+janela = pygame.display.set_mode((largura, altura))
 
 pygame.display.set_caption("Tetris Python")
 
-clock = pygame.time.Clock()  #controla FPS
+clock = pygame.time.Clock()  # controla FPS
 
 linhas = 20
 colunas = 10
@@ -18,7 +18,7 @@ tamanho_celula = 25
 
 rodando = True
 
-tabuleiro =[]
+tabuleiro = []
 
 for linha in range(linhas):
     nova_linha = []
@@ -28,10 +28,7 @@ for linha in range(linhas):
 
     tabuleiro.append(nova_linha)
 
-peca_o = [
-    [1,1],
-    [1,1]
-]
+peca_o = [[1, 1], [1, 1]]
 peca_linha = 5
 peca_coluna = 3
 
@@ -43,13 +40,14 @@ while rodando:
 
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_LEFT:
-                peca_coluna -= 1
+                if peca_coluna > 0:
+                    peca_coluna -= 1
 
             if evento.key == pygame.K_RIGHT:
-                peca_coluna += 1        
+                if peca_coluna < colunas - len(peca_o[0]):
+                    peca_coluna += 1
 
-
-    janela.fill((20,20,20)) #cor RGB
+    janela.fill((20, 20, 20))  # cor RGB
 
     for linha in range(linhas):
         for coluna in range(colunas):
@@ -58,33 +56,24 @@ while rodando:
 
             if tabuleiro[linha][coluna] == 1:
                 pygame.draw.rect(
-                    janela,
-                    (0,200,255),
-                    (x,y,tamanho_celula,tamanho_celula)
+                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
             else:
                 pygame.draw.rect(
-                janela,
-                (80,80,80),
-                (x,y,tamanho_celula,tamanho_celula),
-                1
-            )      
-
+                    janela, (80, 80, 80), (x, y, tamanho_celula, tamanho_celula), 1
+                )
 
     for linha_peca in range(len(peca_o)):
         for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca] ==1:
+            if peca_o[linha_peca][coluna_peca] == 1:
                 x = (peca_coluna + coluna_peca) * tamanho_celula
                 y = (peca_linha + linha_peca) * tamanho_celula
                 pygame.draw.rect(
-                    janela,
-                    (0,200,255),
-                    (x,y,tamanho_celula,tamanho_celula)
+                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
 
     pygame.display.update()
-    clock.tick(60)       #60 FPS   
-
+    clock.tick(60)  # 60 FPS
 
 
 pygame.quit()
