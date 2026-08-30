@@ -18,6 +18,18 @@ tamanho_celula = 25
 
 rodando = True
 
+tabuleiro =[]
+
+for linha in range(linhas):
+    nova_linha = []
+
+    for coluna in range(colunas):
+        nova_linha.append(0)
+
+    tabuleiro.append(nova_linha)
+
+tabuleiro[5][3] =1
+
 while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -29,15 +41,24 @@ while rodando:
         for coluna in range(colunas):
             x = coluna * tamanho_celula
             y = linha * tamanho_celula
-            pygame.draw.rect(
-            janela, 
-            (80,80,80),     #cor RGB
-            # x   y  l   a (onde l = largura e a de altura)
-            (x,y,tamanho_celula,tamanho_celula),  #retangulo
-            1
-    )
 
+            if tabuleiro[linha][coluna] == 1:
+                pygame.draw.rect(
+                    janela,
+                    (0,200,255),
+                    (x,y,tamanho_celula,tamanho_celula)
+                )
+            else:
+                pygame.draw.rect(
+                janela,
+                (80,80,80),
+                (x,y,tamanho_celula,tamanho_celula),
+                1
+            )      
+    
     pygame.display.update()
     clock.tick(60)       #60 FPS   
+
+
 
 pygame.quit()
