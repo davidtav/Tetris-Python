@@ -11,6 +11,11 @@ pygame.display.set_caption("Tetris Python")
 
 clock = pygame.time.Clock()  #controla FPS
 
+linhas = 20
+colunas = 10
+tamanho_celula = 25
+
+
 rodando = True
 
 while rodando:
@@ -19,12 +24,19 @@ while rodando:
             rodando = False
 
     janela.fill((20,20,20)) #cor RGB
-    pygame.draw.rect(
-        janela, 
-        (0,200,255),     #cor RGB
-        # x   y  l   a (onde l = largura e a de altura)
-        (200,150,30,30)  #retangulo
+
+    for linha in range(linhas):
+        for coluna in range(colunas):
+            x = coluna * tamanho_celula
+            y = linha * tamanho_celula
+            pygame.draw.rect(
+            janela, 
+            (80,80,80),     #cor RGB
+            # x   y  l   a (onde l = largura e a de altura)
+            (x,y,tamanho_celula,tamanho_celula),  #retangulo
+            1
     )
+
     pygame.display.update()
     clock.tick(60)       #60 FPS   
 
