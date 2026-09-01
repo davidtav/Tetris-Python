@@ -32,6 +32,8 @@ peca_o = [[1, 1], [1, 1]]
 peca_linha = 5
 peca_coluna = 3
 
+tempo_ultima_queda = pygame.time.get_ticks()
+intervalo_queda = 500 # 500 milisegundos
 
 while rodando:
     for evento in pygame.event.get():
@@ -50,7 +52,24 @@ while rodando:
             if evento.key == pygame.K_DOWN:
                 if peca_linha < linhas -len(peca_o):
                     peca_linha += 1
+    
 
+    tempo_atual = pygame.time.get_ticks()
+    if tempo_atual - tempo_ultima_queda >= intervalo_queda:
+        if peca_linha < linhas - len(peca_o):
+            peca_linha += 1
+        else:
+            for linha_peca in range(len(peca_o)):
+                for coluna_peca in range(len(peca_o[linha_peca])):
+                    if peca_o[linha_peca][coluna_peca] == 1:
+                        tabuleiro[
+                            peca_linha + linha_peca
+                        ][
+                            peca_linha + coluna_peca
+                        ] = 1
+
+        tempo_ultima_queda = tempo_atual                
+   
 
 
 
