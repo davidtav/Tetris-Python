@@ -65,7 +65,7 @@ while rodando:
                         tabuleiro[
                             peca_linha + linha_peca
                         ][
-                            peca_linha + coluna_peca
+                            peca_coluna + coluna_peca
                         ] = 1
 
         tempo_ultima_queda = tempo_atual                
