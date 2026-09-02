@@ -35,6 +35,21 @@ peca_coluna = 3
 tempo_ultima_queda = pygame.time.get_ticks()
 intervalo_queda = 500  # 500 milisegundos
 
+def desenhar_tabuleiro():
+    for linha in range(linhas):
+        for coluna in range(colunas):
+            x = coluna * tamanho_celula
+            y = linha * tamanho_celula
+
+            if tabuleiro[linha][coluna] == 1:
+                pygame.draw.rect(
+                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
+                )
+            else:
+                pygame.draw.rect(
+                    janela, (80, 80, 80), (x, y, tamanho_celula, tamanho_celula), 1
+                )
+
 while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -70,19 +85,7 @@ while rodando:
 
     janela.fill((20, 20, 20))  # cor RGB
 
-    for linha in range(linhas):
-        for coluna in range(colunas):
-            x = coluna * tamanho_celula
-            y = linha * tamanho_celula
-
-            if tabuleiro[linha][coluna] == 1:
-                pygame.draw.rect(
-                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
-                )
-            else:
-                pygame.draw.rect(
-                    janela, (80, 80, 80), (x, y, tamanho_celula, tamanho_celula), 1
-                )
+    desenhar_tabuleiro()
 
     for linha_peca in range(len(peca_o)):
         for coluna_peca in range(len(peca_o[linha_peca])):
