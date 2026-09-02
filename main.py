@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 
-largura = 800
+largura = 400
 altura = 500
 
 janela = pygame.display.set_mode((largura, altura))
@@ -50,6 +50,18 @@ def desenhar_tabuleiro():
                     janela, (80, 80, 80), (x, y, tamanho_celula, tamanho_celula), 1
                 )
 
+def desenhar_peca(): 
+    for linha_peca in range(len(peca_o)):
+        for coluna_peca in range(len(peca_o[linha_peca])):
+            if peca_o[linha_peca][coluna_peca] == 1:
+                x = (peca_coluna + coluna_peca) * tamanho_celula
+                y = (peca_linha + linha_peca) * tamanho_celula
+                pygame.draw.rect(
+                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
+                )
+
+
+
 while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -87,14 +99,7 @@ while rodando:
 
     desenhar_tabuleiro()
 
-    for linha_peca in range(len(peca_o)):
-        for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca] == 1:
-                x = (peca_coluna + coluna_peca) * tamanho_celula
-                y = (peca_linha + linha_peca) * tamanho_celula
-                pygame.draw.rect(
-                    janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
-                )
+    desenhar_peca()
 
     pygame.display.update()
     clock.tick(60)  # 60 FPS
