@@ -60,27 +60,30 @@ def desenhar_peca():
                     janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
 
-
+def processar_eventos(rodando,peca_linha,peca_coluna):
+    for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                rodando = False
+    
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_LEFT:
+                    if peca_coluna > 0:
+                        peca_coluna -= 1
+    
+                if evento.key == pygame.K_RIGHT:
+                    if peca_coluna < colunas - len(peca_o[0]):
+                        peca_coluna += 1
+    
+                if evento.key == pygame.K_DOWN:
+                    if peca_linha < linhas - len(peca_o):
+                        peca_linha += 1
+    return rodando,peca_linha,peca_coluna
 
 while rodando:
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            rodando = False
-
-        if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_LEFT:
-                if peca_coluna > 0:
-                    peca_coluna -= 1
-
-            if evento.key == pygame.K_RIGHT:
-                if peca_coluna < colunas - len(peca_o[0]):
-                    peca_coluna += 1
-
-            if evento.key == pygame.K_DOWN:
-                if peca_linha < linhas - len(peca_o):
-                    peca_linha += 1
+    rodando,peca_linha,peca_coluna = processar_eventos(rodando,peca_linha,peca_coluna)
 
     tempo_atual = pygame.time.get_ticks()
+
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
         if peca_linha < linhas - len(peca_o):
             peca_linha += 1
