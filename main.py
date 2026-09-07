@@ -79,25 +79,30 @@ def processar_eventos(rodando,peca_linha,peca_coluna):
                         peca_linha += 1
     return rodando,peca_linha,peca_coluna
 
+def atualizar_queda(peca_linha,peca_coluna,tempo_ultima_queda):
+    tempo_atual = pygame.time.get_ticks()
+    if tempo_atual - tempo_ultima_queda >= intervalo_queda:
+            if peca_linha < linhas - len(peca_o):
+                peca_linha += 1
+            else:
+                for linha_peca in range(len(peca_o)):
+                    for coluna_peca in range(len(peca_o[linha_peca])):
+                        if peca_o[linha_peca][coluna_peca] == 1:
+                            tabuleiro[peca_linha + linha_peca][peca_coluna + coluna_peca] = 1
+    
+                peca_linha = 0
+                peca_coluna = (colunas - len(peca_o[0])) // 2            
+    
+            tempo_ultima_queda = tempo_atual
+    return peca_linha,peca_coluna,tempo_ultima_queda
+    
+
 while rodando:
     rodando,peca_linha,peca_coluna = processar_eventos(rodando,peca_linha,peca_coluna)
 
-    tempo_atual = pygame.time.get_ticks()
+    peca_linha,peca_coluna,tempo_ultima_queda = atualizar_queda(peca_linha,peca_coluna,tempo_ultima_queda)
 
-    if tempo_atual - tempo_ultima_queda >= intervalo_queda:
-        if peca_linha < linhas - len(peca_o):
-            peca_linha += 1
-        else:
-            for linha_peca in range(len(peca_o)):
-                for coluna_peca in range(len(peca_o[linha_peca])):
-                    if peca_o[linha_peca][coluna_peca] == 1:
-                        tabuleiro[peca_linha + linha_peca][peca_coluna + coluna_peca] = 1
-
-            peca_linha = 0
-            peca_coluna = (colunas - len(peca_o[0])) // 2            
-
-        tempo_ultima_queda = tempo_atual
-
+    
     janela.fill((20, 20, 20))  # cor RGB
 
     desenhar_tabuleiro()
