@@ -79,11 +79,24 @@ def processar_eventos(rodando,peca_linha,peca_coluna):
                         peca_linha += 1
     return rodando,peca_linha,peca_coluna
 
+def pode_descer(peca_linha, peca_coluna):
+    for linha_peca in range(len(peca_o)):
+        for coluna_peca in range(len(peca_o[linha_peca])):
+            if peca_o[linha_peca][coluna_peca]==1:
+                proxima_linha = peca_linha + linha_peca+1
+                coluna_tabuleiro = peca_coluna + coluna_peca
+
+                if proxima_linha >= linhas:
+                    return False
+                if tabuleiro[proxima_linha][coluna_tabuleiro]==1:
+                    return False
+    return True            
+
 def atualizar_queda(peca_linha,peca_coluna,tempo_ultima_queda):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
-            if peca_linha < linhas - len(peca_o):
-                peca_linha += 1
+            if pode_descer(peca_linha,peca_coluna):
+                peca_linha+=1
             else:
                 for linha_peca in range(len(peca_o)):
                     for coluna_peca in range(len(peca_o[linha_peca])):
