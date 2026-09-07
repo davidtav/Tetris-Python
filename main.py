@@ -35,6 +35,7 @@ peca_coluna = 3
 tempo_ultima_queda = pygame.time.get_ticks()
 intervalo_queda = 500  # 500 milisegundos
 
+
 def desenhar_tabuleiro():
     for linha in range(linhas):
         for coluna in range(colunas):
@@ -50,7 +51,8 @@ def desenhar_tabuleiro():
                     janela, (80, 80, 80), (x, y, tamanho_celula, tamanho_celula), 1
                 )
 
-def desenhar_peca(): 
+
+def desenhar_peca():
     for linha_peca in range(len(peca_o)):
         for coluna_peca in range(len(peca_o[linha_peca])):
             if peca_o[linha_peca][coluna_peca] == 1:
@@ -60,62 +62,87 @@ def desenhar_peca():
                     janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
 
-def processar_eventos(rodando,peca_linha,peca_coluna):
+
+def pode_mover_lado(peca_linha,peca_coluna,deslocamento):
+    for linha_peca in range(len(peca_o)):
+        for coluna_peca in range(len(peca_o[linha_peca])):
+            if peca_o[linha_peca][coluna_peca] == 1:
+                linha_tabuleiro = peca_linha + linha_peca
+                nova_coluna = peca_coluna + coluna_peca + deslocamento
+
+                if nova_coluna < 0 or nova_coluna >= colunas:
+                    return False
+
+                if tabuleiro[linha_tabuleiro][nova_coluna] == 1:
+                    return False
+    return True            
+
+
+
+
+def processar_eventos(rodando, peca_linha, peca_coluna):
     for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                rodando = False
-    
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_LEFT:
-                    if peca_coluna > 0:
-                        peca_coluna -= 1
-    
-                if evento.key == pygame.K_RIGHT:
-                    if peca_coluna < colunas - len(peca_o[0]):
-                        peca_coluna += 1
-    
-                if evento.key == pygame.K_DOWN:
-                    if peca_linha < linhas - len(peca_o):
-                        peca_linha += 1
-    return rodando,peca_linha,peca_coluna
+        if evento.type == pygame.QUIT:
+            rodando = False
+
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_LEFT:
+                if pode_mover_lado(peca_linha,peca_coluna,-1):
+                    peca_coluna -= 1
+
+            if evento.key == pygame.K_RIGHT:
+                if pode_mover_lado(peca_linha,peca_coluna,1):
+                    peca_coluna += 1
+
+            if evento.key == pygame.K_DOWN:
+                if pode_descer(peca_linha,peca_coluna):
+                    peca_linha += 1
+    return rodando, peca_linha, peca_coluna
+
 
 def pode_descer(peca_linha, peca_coluna):
     for linha_peca in range(len(peca_o)):
         for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca]==1:
-                proxima_linha = peca_linha + linha_peca+1
+            if peca_o[linha_peca][coluna_peca] == 1:
+                proxima_linha = peca_linha + linha_peca + 1
                 coluna_tabuleiro = peca_coluna + coluna_peca
 
                 if proxima_linha >= linhas:
                     return False
-                if tabuleiro[proxima_linha][coluna_tabuleiro]==1:
+                if tabuleiro[proxima_linha][coluna_tabuleiro] == 1:
                     return False
-    return True            
+    return True
 
-def atualizar_queda(peca_linha,peca_coluna,tempo_ultima_queda):
+
+def atualizar_queda(peca_linha, peca_coluna, tempo_ultima_queda):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
-            if pode_descer(peca_linha,peca_coluna):
-                peca_linha+=1
-            else:
-                for linha_peca in range(len(peca_o)):
-                    for coluna_peca in range(len(peca_o[linha_peca])):
-                        if peca_o[linha_peca][coluna_peca] == 1:
-                            tabuleiro[peca_linha + linha_peca][peca_coluna + coluna_peca] = 1
-    
-                peca_linha = 0
-                peca_coluna = (colunas - len(peca_o[0])) // 2            
-    
-            tempo_ultima_queda = tempo_atual
-    return peca_linha,peca_coluna,tempo_ultima_queda
-    
+        if pode_descer(peca_linha, peca_coluna):
+            peca_linha += 1
+        else:
+            for linha_peca in range(len(peca_o)):
+                for coluna_peca in range(len(peca_o[linha_peca])):
+                    if peca_o[linha_peca][coluna_peca] == 1:
+                        tabuleiro[peca_linha + linha_peca][
+                            peca_coluna + coluna_peca
+                        ] = 1
+
+            peca_linha = 0
+            peca_coluna = (colunas - len(peca_o[0])) // 2
+
+        tempo_ultima_queda = tempo_atual
+    return peca_linha, peca_coluna, tempo_ultima_queda
+
 
 while rodando:
-    rodando,peca_linha,peca_coluna = processar_eventos(rodando,peca_linha,peca_coluna)
+    rodando, peca_linha, peca_coluna = processar_eventos(
+        rodando, peca_linha, peca_coluna
+    )
 
-    peca_linha,peca_coluna,tempo_ultima_queda = atualizar_queda(peca_linha,peca_coluna,tempo_ultima_queda)
+    peca_linha, peca_coluna, tempo_ultima_queda = atualizar_queda(
+        peca_linha, peca_coluna, tempo_ultima_queda
+    )
 
-    
     janela.fill((20, 20, 20))  # cor RGB
 
     desenhar_tabuleiro()
