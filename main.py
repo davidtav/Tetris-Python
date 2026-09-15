@@ -28,7 +28,22 @@ for linha in range(linhas):
 
     tabuleiro.append(nova_linha)
 
+peca_i = [[1, 1, 1, 1]]
 peca_o = [[1, 1], [1, 1]]
+peca_t = [[0, 1, 0], [1, 1, 1]]
+peca_l = [[1, 0], [1, 0], [1, 1]]
+peca_j = [[0, 1], [0, 1], [1, 1]]
+peca_s = [[0, 1, 1], [1, 1, 0]]
+peca_z = [[1, 1, 0], [0, 1, 1]]
+pecas = [
+    peca_i,
+    peca_o,
+    peca_t,
+    peca_l,
+    peca_j,
+    peca_s,
+    peca_z
+]
 peca_atual = peca_o
 peca_linha = 5
 peca_coluna = 3
@@ -64,7 +79,7 @@ def desenhar_peca():
                 )
 
 
-def pode_mover_lado(peca_linha,peca_coluna,deslocamento):
+def pode_mover_lado(peca_linha, peca_coluna, deslocamento):
     for linha_peca in range(len(peca_atual)):
         for coluna_peca in range(len(peca_atual[linha_peca])):
             if peca_atual[linha_peca][coluna_peca] == 1:
@@ -76,9 +91,7 @@ def pode_mover_lado(peca_linha,peca_coluna,deslocamento):
 
                 if tabuleiro[linha_tabuleiro][nova_coluna] == 1:
                     return False
-    return True            
-
-
+    return True
 
 
 def processar_eventos(rodando, peca_linha, peca_coluna):
@@ -88,15 +101,15 @@ def processar_eventos(rodando, peca_linha, peca_coluna):
 
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_LEFT:
-                if pode_mover_lado(peca_linha,peca_coluna,-1):
+                if pode_mover_lado(peca_linha, peca_coluna, -1):
                     peca_coluna -= 1
 
             if evento.key == pygame.K_RIGHT:
-                if pode_mover_lado(peca_linha,peca_coluna,1):
+                if pode_mover_lado(peca_linha, peca_coluna, 1):
                     peca_coluna += 1
 
             if evento.key == pygame.K_DOWN:
-                if pode_descer(peca_linha,peca_coluna):
+                if pode_descer(peca_linha, peca_coluna):
                     peca_linha += 1
     return rodando, peca_linha, peca_coluna
 
