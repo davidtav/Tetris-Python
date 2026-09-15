@@ -29,6 +29,7 @@ for linha in range(linhas):
     tabuleiro.append(nova_linha)
 
 peca_o = [[1, 1], [1, 1]]
+peca_atual = peca_o
 peca_linha = 5
 peca_coluna = 3
 
@@ -53,9 +54,9 @@ def desenhar_tabuleiro():
 
 
 def desenhar_peca():
-    for linha_peca in range(len(peca_o)):
-        for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca] == 1:
+    for linha_peca in range(len(peca_atual)):
+        for coluna_peca in range(len(peca_atual[linha_peca])):
+            if peca_atual[linha_peca][coluna_peca] == 1:
                 x = (peca_coluna + coluna_peca) * tamanho_celula
                 y = (peca_linha + linha_peca) * tamanho_celula
                 pygame.draw.rect(
@@ -64,9 +65,9 @@ def desenhar_peca():
 
 
 def pode_mover_lado(peca_linha,peca_coluna,deslocamento):
-    for linha_peca in range(len(peca_o)):
-        for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca] == 1:
+    for linha_peca in range(len(peca_atual)):
+        for coluna_peca in range(len(peca_atual[linha_peca])):
+            if peca_atual[linha_peca][coluna_peca] == 1:
                 linha_tabuleiro = peca_linha + linha_peca
                 nova_coluna = peca_coluna + coluna_peca + deslocamento
 
@@ -101,9 +102,9 @@ def processar_eventos(rodando, peca_linha, peca_coluna):
 
 
 def pode_descer(peca_linha, peca_coluna):
-    for linha_peca in range(len(peca_o)):
-        for coluna_peca in range(len(peca_o[linha_peca])):
-            if peca_o[linha_peca][coluna_peca] == 1:
+    for linha_peca in range(len(peca_atual)):
+        for coluna_peca in range(len(peca_atual[linha_peca])):
+            if peca_atual[linha_peca][coluna_peca] == 1:
                 proxima_linha = peca_linha + linha_peca + 1
                 coluna_tabuleiro = peca_coluna + coluna_peca
 
@@ -120,15 +121,15 @@ def atualizar_queda(peca_linha, peca_coluna, tempo_ultima_queda):
         if pode_descer(peca_linha, peca_coluna):
             peca_linha += 1
         else:
-            for linha_peca in range(len(peca_o)):
-                for coluna_peca in range(len(peca_o[linha_peca])):
-                    if peca_o[linha_peca][coluna_peca] == 1:
+            for linha_peca in range(len(peca_atual)):
+                for coluna_peca in range(len(peca_atual[linha_peca])):
+                    if peca_atual[linha_peca][coluna_peca] == 1:
                         tabuleiro[peca_linha + linha_peca][
                             peca_coluna + coluna_peca
                         ] = 1
 
             peca_linha = 0
-            peca_coluna = (colunas - len(peca_o[0])) // 2
+            peca_coluna = (colunas - len(peca_atual[0])) // 2
 
         tempo_ultima_queda = tempo_atual
     return peca_linha, peca_coluna, tempo_ultima_queda
