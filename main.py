@@ -1,4 +1,5 @@
 import pygame
+import random
 
 pygame.init()
 
@@ -44,9 +45,9 @@ pecas = [
     peca_s,
     peca_z
 ]
-peca_atual = peca_o
-peca_linha = 5
-peca_coluna = 3
+peca_atual = random.choice(pecas)
+peca_linha = 0
+peca_coluna = (colunas -len(peca_atual[0])) //2
 
 tempo_ultima_queda = pygame.time.get_ticks()
 intervalo_queda = 500  # 500 milisegundos
@@ -128,7 +129,7 @@ def pode_descer(peca_linha, peca_coluna):
     return True
 
 
-def atualizar_queda(peca_linha, peca_coluna, tempo_ultima_queda):
+def atualizar_queda( peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
         if pode_descer(peca_linha, peca_coluna):
@@ -140,12 +141,12 @@ def atualizar_queda(peca_linha, peca_coluna, tempo_ultima_queda):
                         tabuleiro[peca_linha + linha_peca][
                             peca_coluna + coluna_peca
                         ] = 1
-
+            peca_atual = random.choice(pecas)
             peca_linha = 0
             peca_coluna = (colunas - len(peca_atual[0])) // 2
 
         tempo_ultima_queda = tempo_atual
-    return peca_linha, peca_coluna, tempo_ultima_queda
+    return peca_atual, peca_linha, peca_coluna, tempo_ultima_queda
 
 
 while rodando:
@@ -153,8 +154,8 @@ while rodando:
         rodando, peca_linha, peca_coluna
     )
 
-    peca_linha, peca_coluna, tempo_ultima_queda = atualizar_queda(
-        peca_linha, peca_coluna, tempo_ultima_queda
+    peca_atual, peca_linha, peca_coluna, tempo_ultima_queda = atualizar_queda(
+        peca_atual,peca_linha, peca_coluna, tempo_ultima_queda
     )
 
     janela.fill((20, 20, 20))  # cor RGB
