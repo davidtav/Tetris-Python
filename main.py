@@ -149,6 +149,20 @@ def pode_descer(peca_linha, peca_coluna):
                     return False
     return True
 
+def remover_linhas_completas():
+    linhas_restantes = []
+    for linha in tabuleiro:
+        if 0 in linha:
+            linhas_restantes.append(linha)
+
+    linhas_removidas = linhas - len(linhas_restantes)
+
+    for _ in range(linhas_removidas):
+        nova_linha = [0] *colunas
+        linhas_restantes.insert(0, nova_linha)
+
+    tabuleiro[:] = linhas_restantes
+    return linhas_removidas        
 
 def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
     tempo_atual = pygame.time.get_ticks()
@@ -162,6 +176,7 @@ def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
                         tabuleiro[peca_linha + linha_peca][
                             peca_coluna + coluna_peca
                         ] = 1
+            remover_linhas_completas()            
             peca_atual = random.choice(pecas)
             peca_linha = 0
             peca_coluna = (colunas - len(peca_atual[0])) // 2
