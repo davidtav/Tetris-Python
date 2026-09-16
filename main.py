@@ -36,18 +36,10 @@ peca_l = [[1, 0], [1, 0], [1, 1]]
 peca_j = [[0, 1], [0, 1], [1, 1]]
 peca_s = [[0, 1, 1], [1, 1, 0]]
 peca_z = [[1, 1, 0], [0, 1, 1]]
-pecas = [
-    peca_i,
-    peca_o,
-    peca_t,
-    peca_l,
-    peca_j,
-    peca_s,
-    peca_z
-]
+pecas = [peca_i, peca_o, peca_t, peca_l, peca_j, peca_s, peca_z]
 peca_atual = random.choice(pecas)
 peca_linha = 0
-peca_coluna = (colunas -len(peca_atual[0])) //2
+peca_coluna = (colunas - len(peca_atual[0])) // 2
 
 tempo_ultima_queda = pygame.time.get_ticks()
 intervalo_queda = 500  # 500 milisegundos
@@ -95,7 +87,30 @@ def pode_mover_lado(peca_linha, peca_coluna, deslocamento):
     return True
 
 
-def processar_eventos(rodando, peca_linha, peca_coluna):
+def rotacionar_peca(peca):
+    return [list(linha) for linha in zip(*peca[::-1])]
+
+
+def pode_rotacionar(peca_rotacionada, peca_linha, peca_coluna):
+    for linha_peca in range(len(peca_rotacionada)):
+        for coluna_peca in range(len(peca_rotacionada[linha_peca])):
+            if peca_rotacionada[linha_peca][coluna_peca] == 1:
+                linha_tabuleiro = peca_linha + linha_peca
+                coluna_tabuleiro = peca_coluna + coluna_peca
+
+                if linha_tabuleiro >= linhas:
+                    return False
+
+                if coluna_tabuleiro < 0 or coluna_tabuleiro >= colunas:
+                    return False
+
+                if tabuleiro[linha_tabuleiro][coluna_tabuleiro] == 1:
+                    return False
+
+    return True
+
+
+def processar_eventos(rodando, peca_atual, peca_linha, peca_coluna):
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
@@ -112,7 +127,13 @@ def processar_eventos(rodando, peca_linha, peca_coluna):
             if evento.key == pygame.K_DOWN:
                 if pode_descer(peca_linha, peca_coluna):
                     peca_linha += 1
-    return rodando, peca_linha, peca_coluna
+
+            if evento.key == pygame.K_UP:
+                peca_rotacionada = rotacionar_peca(peca_atual)
+
+                if pode_rotacionar(peca_rotacionada, peca_linha, peca_coluna):
+                    peca_atual = peca_rotacionada
+    return rodando, peca_atual, peca_linha, peca_coluna
 
 
 def pode_descer(peca_linha, peca_coluna):
@@ -129,7 +150,7 @@ def pode_descer(peca_linha, peca_coluna):
     return True
 
 
-def atualizar_queda( peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
+def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
         if pode_descer(peca_linha, peca_coluna):
@@ -150,12 +171,12 @@ def atualizar_queda( peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
 
 
 while rodando:
-    rodando, peca_linha, peca_coluna = processar_eventos(
-        rodando, peca_linha, peca_coluna
+    rodando, peca_atual, peca_linha, peca_coluna = processar_eventos(
+        rodando, peca_atual, peca_linha, peca_coluna
     )
 
     peca_atual, peca_linha, peca_coluna, tempo_ultima_queda = atualizar_queda(
-        peca_atual,peca_linha, peca_coluna, tempo_ultima_queda
+        peca_atual, peca_linha, peca_coluna, tempo_ultima_queda
     )
 
     janela.fill((20, 20, 20))  # cor RGB
