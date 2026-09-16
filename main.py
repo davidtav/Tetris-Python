@@ -3,7 +3,7 @@ import random
 
 pygame.init()
 
-largura = 400
+largura = 450
 altura = 500
 
 janela = pygame.display.set_mode((largura, altura))
@@ -11,6 +11,7 @@ janela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption("Tetris Python")
 
 clock = pygame.time.Clock()  # controla FPS
+fonte = pygame.font.Font(None, 36)
 
 linhas = 20
 colunas = 10
@@ -70,6 +71,16 @@ def desenhar_peca():
                 pygame.draw.rect(
                     janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
+
+def desenhar_pontuacao():
+    texto = fonte.render(
+        f"Pontos: {pontuacao}",
+        True,
+        (255, 255, 255)
+    )
+
+    janela.blit(texto, (270, 30))
+
 
 
 def pode_mover_lado(peca_linha, peca_coluna, deslocamento):
@@ -164,7 +175,7 @@ def remover_linhas_completas():
     tabuleiro[:] = linhas_restantes
     return linhas_removidas        
 
-def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
+def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda,pontuacao):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
         if pode_descer(peca_linha, peca_coluna):
@@ -176,22 +187,27 @@ def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda):
                         tabuleiro[peca_linha + linha_peca][
                             peca_coluna + coluna_peca
                         ] = 1
-            remover_linhas_completas()            
+            linhas_removidas = remover_linhas_completas()
+            pontuacao += linhas_removidas * 100            
             peca_atual = random.choice(pecas)
             peca_linha = 0
             peca_coluna = (colunas - len(peca_atual[0])) // 2
 
         tempo_ultima_queda = tempo_atual
-    return peca_atual, peca_linha, peca_coluna, tempo_ultima_queda
+    return peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao
 
+
+
+
+pontuacao = 0
 
 while rodando:
     rodando, peca_atual, peca_linha, peca_coluna = processar_eventos(
         rodando, peca_atual, peca_linha, peca_coluna
     )
 
-    peca_atual, peca_linha, peca_coluna, tempo_ultima_queda = atualizar_queda(
-        peca_atual, peca_linha, peca_coluna, tempo_ultima_queda
+    peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao = atualizar_queda(
+        peca_atual, peca_linha, peca_coluna, tempo_ultima_queda,pontuacao
     )
 
     janela.fill((20, 20, 20))  # cor RGB
@@ -199,9 +215,9 @@ while rodando:
     desenhar_tabuleiro()
 
     desenhar_peca()
-
+    desenhar_pontuacao()
     pygame.display.update()
     clock.tick(60)  # 60 FPS
-
+ 
 
 pygame.quit()
