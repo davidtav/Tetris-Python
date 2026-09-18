@@ -17,7 +17,7 @@ linhas = 20
 colunas = 10
 tamanho_celula = 25
 
-
+game_over = False
 rodando = True
 
 tabuleiro = []
@@ -46,6 +46,15 @@ tempo_ultima_queda = pygame.time.get_ticks()
 intervalo_queda = 500  # 500 milisegundos
 
 
+def desenhar_game_over():
+    texto = fonte.render(
+        "GAME OVER",
+        True,
+        (255, 255, 255)
+    )
+
+    janela.blit(texto, (270, 100))
+
 def desenhar_tabuleiro():
     for linha in range(linhas):
         for coluna in range(colunas):
@@ -72,15 +81,11 @@ def desenhar_peca():
                     janela, (0, 200, 255), (x, y, tamanho_celula, tamanho_celula)
                 )
 
+
 def desenhar_pontuacao():
-    texto = fonte.render(
-        f"Pontos: {pontuacao}",
-        True,
-        (255, 255, 255)
-    )
+    texto = fonte.render(f"Pontos: {pontuacao}", True, (255, 255, 255))
 
     janela.blit(texto, (270, 30))
-
 
 
 def pode_mover_lado(peca_linha, peca_coluna, deslocamento):
@@ -147,6 +152,23 @@ def processar_eventos(rodando, peca_atual, peca_linha, peca_coluna):
     return rodando, peca_atual, peca_linha, peca_coluna
 
 
+def pode_posicionar_peca(peca, peca_linha, peca_coluna):
+    for linha_peca in range(len(peca)):
+        for coluna_peca in range(len(peca[linha_peca])):
+            if peca[linha_peca][coluna_peca] == 1:
+                linha_tabuleiro = peca_linha + linha_peca
+                coluna_tabuleiro = peca_coluna + coluna_peca
+
+                if linha_tabuleiro >= linhas:
+                    return False
+
+                if coluna_tabuleiro < 0 or coluna_tabuleiro >= colunas:
+                    return False
+                if tabuleiro[linha_tabuleiro][coluna_tabuleiro] == 1:
+                    return False
+    return True
+
+
 def pode_descer(peca_linha, peca_coluna):
     for linha_peca in range(len(peca_atual)):
         for coluna_peca in range(len(peca_atual[linha_peca])):
@@ -160,6 +182,7 @@ def pode_descer(peca_linha, peca_coluna):
                     return False
     return True
 
+
 def remover_linhas_completas():
     linhas_restantes = []
     for linha in tabuleiro:
@@ -169,13 +192,16 @@ def remover_linhas_completas():
     linhas_removidas = linhas - len(linhas_restantes)
 
     for _ in range(linhas_removidas):
-        nova_linha = [0] *colunas
+        nova_linha = [0] * colunas
         linhas_restantes.insert(0, nova_linha)
 
     tabuleiro[:] = linhas_restantes
-    return linhas_removidas        
+    return linhas_removidas
 
-def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda,pontuacao):
+
+def atualizar_queda(
+    peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao, game_over
+):
     tempo_atual = pygame.time.get_ticks()
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
         if pode_descer(peca_linha, peca_coluna):
@@ -188,36 +214,54 @@ def atualizar_queda(peca_atual, peca_linha, peca_coluna, tempo_ultima_queda,pont
                             peca_coluna + coluna_peca
                         ] = 1
             linhas_removidas = remover_linhas_completas()
-            pontuacao += linhas_removidas * 100            
+            pontuacao += linhas_removidas * 100
             peca_atual = random.choice(pecas)
             peca_linha = 0
             peca_coluna = (colunas - len(peca_atual[0])) // 2
+            if not pode_posicionar_peca(peca_atual, peca_linha, peca_coluna):
+                game_over = True
 
         tempo_ultima_queda = tempo_atual
-    return peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao
-
-
+    return peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao, game_over
 
 
 pontuacao = 0
 
 while rodando:
     rodando, peca_atual, peca_linha, peca_coluna = processar_eventos(
-        rodando, peca_atual, peca_linha, peca_coluna
+        rodando,
+        peca_atual,
+        peca_linha,
+        peca_coluna
     )
 
-    peca_atual, peca_linha, peca_coluna, tempo_ultima_queda, pontuacao = atualizar_queda(
-        peca_atual, peca_linha, peca_coluna, tempo_ultima_queda,pontuacao
-    )
+    if not game_over:
+        (
+            peca_atual,
+            peca_linha,
+            peca_coluna,
+            tempo_ultima_queda,
+            pontuacao,
+            game_over,
+        ) = atualizar_queda(
+            peca_atual,
+            peca_linha,
+            peca_coluna,
+            tempo_ultima_queda,
+            pontuacao,
+            game_over,
+        )
 
-    janela.fill((20, 20, 20))  # cor RGB
+    janela.fill((20, 20, 20))
 
     desenhar_tabuleiro()
-
     desenhar_peca()
     desenhar_pontuacao()
+
+    if game_over:
+        desenhar_game_over()
+
     pygame.display.update()
-    clock.tick(60)  # 60 FPS
- 
+    clock.tick(60)
 
 pygame.quit()
