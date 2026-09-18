@@ -54,6 +54,10 @@ def desenhar_game_over():
     )
 
     janela.blit(texto, (270, 100))
+    texto_reiniciar = fonte.render("R = Reiniciar", True, (255, 255, 255)
+    )
+
+    janela.blit(texto_reiniciar, (270, 140))
 
 def desenhar_tabuleiro():
     for linha in range(linhas):
@@ -127,6 +131,7 @@ def pode_rotacionar(peca_rotacionada, peca_linha, peca_coluna):
 
 
 def processar_eventos(rodando, peca_atual, peca_linha, peca_coluna):
+    global game_over
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
@@ -149,6 +154,10 @@ def processar_eventos(rodando, peca_atual, peca_linha, peca_coluna):
 
                 if pode_rotacionar(peca_rotacionada, peca_linha, peca_coluna):
                     peca_atual = peca_rotacionada
+
+            if evento.key == pygame.K_r:
+                if game_over:
+                     reiniciar_jogo()        
     return rodando, peca_atual, peca_linha, peca_coluna
 
 
@@ -226,6 +235,35 @@ def atualizar_queda(
 
 
 pontuacao = 0
+
+def reiniciar_jogo():
+    global tabuleiro
+    global peca_atual
+    global peca_linha
+    global peca_coluna
+    global pontuacao
+    global game_over
+    global tempo_ultima_queda
+
+    tabuleiro = []
+
+    for linha in range(linhas):
+        nova_linha = []
+
+        for coluna in range(colunas):
+            nova_linha.append(0)
+
+        tabuleiro.append(nova_linha)
+
+    peca_atual = random.choice(pecas)
+
+    peca_linha = 0
+    peca_coluna = (colunas - len(peca_atual[0])) // 2
+
+    pontuacao = 0
+    game_over = False
+
+    tempo_ultima_queda = pygame.time.get_ticks()
 
 while rodando:
     rodando, peca_atual, peca_linha, peca_coluna = processar_eventos(
