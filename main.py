@@ -446,7 +446,7 @@ def processar_eventos(
 
                 if evento.key == pygame.K_LEFT:
                     if pode_mover_lado(peca, -1):
-                        peca.coluna -= 1
+                        peca.mover_esquerda()
 
                 if evento.key == pygame.K_RIGHT:
                     if pode_mover_lado(peca, 1):
