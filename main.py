@@ -454,7 +454,7 @@ def processar_eventos(
 
                 if evento.key == pygame.K_DOWN:
                     if pode_descer(peca):
-                        peca.linha += 1
+                        peca.descer()
 
                 if evento.key == pygame.K_UP:
                     peca_rotacionada = peca.rotacionar()
