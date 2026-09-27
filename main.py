@@ -248,13 +248,6 @@ def pode_descer(peca):
 # ROTAÇÃO
 # -------------------------
 
-def rotacionar_peca(formato):
-    return [
-        list(linha)
-        for linha in zip(*formato[::-1])
-    ]
-
-
 def pode_rotacionar(peca_rotacionada, peca):
     for linha_peca in range(len(peca_rotacionada)):
         for coluna_peca in range(
