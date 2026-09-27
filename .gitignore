@@ -7,8 +7,10 @@ __pycache__/
 
 # VS Code
 .vscode/
+
 # pycharm
 .idea/
+
 # Sistema
 .DS_Store
 Thumbs.db
