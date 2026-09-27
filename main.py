@@ -363,7 +363,7 @@ def atualizar_queda(
     if tempo_atual - tempo_ultima_queda >= intervalo_queda:
 
         if pode_descer(peca):
-            peca.linha += 1
+            peca.descer()
 
         else:
             fixar_peca(peca)
