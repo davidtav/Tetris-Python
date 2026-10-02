@@ -98,27 +98,22 @@ class Peca:
     def descer(self):
         self.linha += 1
 # -------------------------
-# CRIAÇÃO DO TABULEIRO
+# CLASSE TABULEIRO
 # -------------------------
+class Tabuleiro:
+    def __init__(self):
+        self.matriz = []
 
-def criar_tabuleiro():
-    novo_tabuleiro = []
+        for linha in range(linhas):
+            nova_linha = []
 
-    for linha in range(linhas):
-        nova_linha = []
+            for coluna in range(colunas):
+                nova_linha.append(0)
 
-        for coluna in range(colunas):
-            nova_linha.append(0)
+            self.matriz.append(nova_linha)
 
-        novo_tabuleiro.append(nova_linha)
-
-    return novo_tabuleiro
-
-
-tabuleiro = criar_tabuleiro()
-
+tabuleiro = Tabuleiro()
 peca_atual = Peca(random.choice(pecas))
-
 
 # -------------------------
 # DESENHO
@@ -130,7 +125,7 @@ def desenhar_tabuleiro():
             x = coluna * tamanho_celula
             y = linha * tamanho_celula
 
-            if tabuleiro[linha][coluna] == 1:
+            if tabuleiro.matriz[linha][coluna] == 1:
                 pygame.draw.rect(
                     janela,
                     (0, 200, 255),
@@ -213,7 +208,7 @@ def pode_mover_lado(peca, deslocamento):
                 if nova_coluna < 0 or nova_coluna >= colunas:
                     return False
 
-                if tabuleiro[linha_tabuleiro][nova_coluna] == 1:
+                if tabuleiro.matriz[linha_tabuleiro][nova_coluna] == 1:
                     return False
 
     return True
@@ -238,7 +233,7 @@ def pode_descer(peca):
                 if proxima_linha >= linhas:
                     return False
 
-                if tabuleiro[proxima_linha][coluna_tabuleiro] == 1:
+                if tabuleiro.matriz[proxima_linha][coluna_tabuleiro] == 1:
                     return False
 
     return True
@@ -271,7 +266,7 @@ def pode_rotacionar(peca_rotacionada, peca):
                 if coluna_tabuleiro < 0 or coluna_tabuleiro >= colunas:
                     return False
 
-                if tabuleiro[linha_tabuleiro][coluna_tabuleiro] == 1:
+                if tabuleiro.matriz[linha_tabuleiro][coluna_tabuleiro] == 1:
                     return False
 
     return True
@@ -302,7 +297,7 @@ def pode_posicionar_peca(peca):
                 if coluna_tabuleiro < 0 or coluna_tabuleiro >= colunas:
                     return False
 
-                if tabuleiro[linha_tabuleiro][coluna_tabuleiro] == 1:
+                if tabuleiro.matriz[linha_tabuleiro][coluna_tabuleiro] == 1:
                     return False
 
     return True
@@ -327,13 +322,13 @@ def fixar_peca(peca):
                     + coluna_peca
                 )
 
-                tabuleiro[linha_tabuleiro][coluna_tabuleiro] = 1
+                tabuleiro.matriz[linha_tabuleiro][coluna_tabuleiro] = 1
 
 
 def remover_linhas_completas():
     linhas_restantes = []
 
-    for linha in tabuleiro:
+    for linha in tabuleiro.matriz:
         if 0 in linha:
             linhas_restantes.append(linha)
 
@@ -343,7 +338,7 @@ def remover_linhas_completas():
         nova_linha = [0] * colunas
         linhas_restantes.insert(0, nova_linha)
 
-    tabuleiro[:] = linhas_restantes
+    tabuleiro.matriz[:] = linhas_restantes
 
     return linhas_removidas
 
@@ -394,7 +389,7 @@ def atualizar_queda(
 # -------------------------
 
 def reiniciar_jogo():
-    novo_tabuleiro = criar_tabuleiro()
+    novo_tabuleiro = Tabuleiro()
 
     nova_peca = Peca(
         random.choice(pecas)
