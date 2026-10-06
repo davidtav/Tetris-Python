@@ -112,6 +112,23 @@ class Tabuleiro:
 
             self.matriz.append(nova_linha)
 
+    def fixar_peca(self,peca):
+        for linha_peca in range(len(peca.formato)):
+            for coluna_peca in range(len(peca.formato[linha_peca])):
+
+                if peca.formato[linha_peca][coluna_peca] == 1:
+                    linha_tabuleiro = (
+                            peca.linha
+                            + linha_peca
+                    )
+
+                    coluna_tabuleiro = (
+                            peca.coluna
+                            + coluna_peca
+                    )
+
+                    self.matriz[linha_tabuleiro][coluna_tabuleiro] = 1
+
 tabuleiro = Tabuleiro()
 peca_atual = Peca(random.choice(pecas))
 
@@ -307,22 +324,7 @@ def pode_posicionar_peca(peca):
 # TABULEIRO
 # -------------------------
 
-def fixar_peca(peca):
-    for linha_peca in range(len(peca.formato)):
-        for coluna_peca in range(len(peca.formato[linha_peca])):
 
-            if peca.formato[linha_peca][coluna_peca] == 1:
-                linha_tabuleiro = (
-                    peca.linha
-                    + linha_peca
-                )
-
-                coluna_tabuleiro = (
-                    peca.coluna
-                    + coluna_peca
-                )
-
-                tabuleiro.matriz[linha_tabuleiro][coluna_tabuleiro] = 1
 
 
 def remover_linhas_completas():
@@ -361,7 +363,7 @@ def atualizar_queda(
             peca.descer()
 
         else:
-            fixar_peca(peca)
+            tabuleiro.fixar_peca(peca)
 
             linhas_removidas = remover_linhas_completas()
 
